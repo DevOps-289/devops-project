@@ -1,0 +1,4 @@
+minikube-linux-amd64
+kubectl
+.minikube/
+.kube/
