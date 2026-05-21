@@ -11,7 +11,8 @@ pipeline {
         }
         stage('OWASP Dependency Check') {
             steps {
-                dependencyCheck additionalArguments: '--scan ./'
+                  // Explicitly declare the tool name "owasp"
+		  dependencyCheck odcInstallation: 'owasp', additionalArguments: '--scan ./'
             }
         }
         stage('SonarQube Analysis') {
@@ -28,10 +29,14 @@ pipeline {
             }
         }
         stage('Docker Build') {
-            steps {
-                sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER .'
-            }
-        }
+	    steps {
+		// Explicitly include the target hub URL parameter
+	        withDockerRegistry([credentialsId: 'dockerhub', url: 'https://docker.io']) {
+		     sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER .'
+	        }
+	    }
+	}
+
         stage('Trivy Scan') {
             steps {
                 sh 'trivy image $IMAGE_NAME:$BUILD_NUMBER'
