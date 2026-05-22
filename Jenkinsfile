@@ -10,7 +10,7 @@ pipeline {
 
         stage('OWASP Dependency Check') {
             steps {
-                dependencyCheck odcInstallation: 'owasp', additionalArguments: '--scan ./'
+                dependencyCheck odcInstallation: 'owasp', additionalArguments: '--scan ./ --nvdConfigFile https://github.io'
             }
         }
         
